@@ -24,12 +24,6 @@
    make api
    ```
 
-5. (Optional) Start the `streamlit` for UI development:
-
-   ```bash
-   make ui
-   ```
-
 ### Documentation as Code
 
 This API documentation is generated using [mkdocs-material](https://squidfunk.github.io/mkdocs-material/) and [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings) for docs-as-code.

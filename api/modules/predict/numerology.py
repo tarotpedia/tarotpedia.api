@@ -18,7 +18,7 @@ class NumerologyReader:
 
     models: list[str] = MODEL_LISTS
     client: openai.AsyncOpenAI = OPENAI_BASE_CLIENT
-    max_analysis_length: int = 1000
+    max_analysis_length: int = 1500
 
     @classmethod
     def configure(

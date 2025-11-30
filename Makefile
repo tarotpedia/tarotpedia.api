@@ -12,6 +12,3 @@ docs-dev: .install-uv
 
 api: .install-uv
 	@uv run uvicorn api.index:app --reload --reload-dir api
-
-ui: .install-uv
-	@uv run streamlit run api/inference.py
