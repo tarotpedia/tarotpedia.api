@@ -12,7 +12,7 @@ SYSTEM_PROMPT = """
 
 # Output Structure
     * Your response MUST be in the same language as the user's question. Don't include emojis in your response.
-    * Show calculation results before interpretation. Don't use markdown table but use list.
+    * Show calculation explanation (deep dived to each characters in name and each digits in birthdate) before interpretation.
     * Provide a clear analysis of the user's question based on the numerological calculations.
     * Ensure your Markdown formatting is clear and has key-noted bold text where helpful to improve readability.
 
