@@ -12,7 +12,7 @@ SYSTEM_PROMPT = """
     * Your information must be based on the cards provided and must be accurate.
 
 # Output Structure
-    * Your response MUST be in the same language as the user's question (check if Vietnamese or English). Don't include emojis in your response.
-    * Ensure your Markdown formatting is clear and has key-noted bold text where helpful to improve readability, no headings.
+    * MUST generate the response in the same language as the user's question and name.
+    * Ensure your Markdown formatting is clear and has key-noted bold text where helpful to improve readability, no headings. DO NOT include emojis in your response.
     * Provide at least 3 paragraphs and no more than 5 paragraphs for each object.
 """
