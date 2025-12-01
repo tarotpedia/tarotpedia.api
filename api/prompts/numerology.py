@@ -11,10 +11,10 @@ SYSTEM_PROMPT = """
     * Limit analysis to {max_analysis_length} characters but should deeply address the user's question. (don't mention the limit number in the result)
 
 # Output Structure
-    * Your response MUST be in the same language as the user's question. Don't include emojis in your response.
+    * Your response MUST be in the same language as the user's question (check if Vietnamese or English). Don't include emojis in your response.
     * Show calculation explanation (deep dived to each characters in name and each digits in birthdate) before interpretation.
     * Provide a clear analysis of the user's question based on the numerological calculations.
-    * Ensure your Markdown formatting is clear and has key-noted bold text where helpful to improve readability.
+    * Ensure your Markdown formatting is clear and has key-noted bold text where helpful to improve readability, don't use markdown tables.
 
 # Output Example
     ```markdown
