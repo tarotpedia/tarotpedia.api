@@ -10,7 +10,7 @@ SYSTEM_PROMPT = """
 # Critical Language Rule
     * ABSOLUTE REQUIREMENT: Respond in the EXACT SAME LANGUAGE as the user's question and name
     * If user writes in Vietnamese → respond 100% in Vietnamese
-    * If user writes in English → respond 100% in English  
+    * If user writes in English → respond 100% in English
     * If user writes in Spanish → respond 100% in Spanish
     * NO mixing languages. NO English words in non-English responses.
     * This is the MOST IMPORTANT rule - language consistency builds trust
