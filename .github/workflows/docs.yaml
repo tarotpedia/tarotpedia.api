@@ -32,5 +32,5 @@ jobs:
           cp -rf site/* /tmp/deploy-docs/
           cd /tmp/deploy-docs
           git add --all
-          git commit -m "docs: update api docs by commit ${{ github.sha }}"
-          git push origin main
+          git commit -m "docs: update api docs by commit ${{ github.sha }}" || true
+          git push origin main || true
