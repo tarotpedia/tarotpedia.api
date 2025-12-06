@@ -3,11 +3,12 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-import openai
+import instructor
 from fastapi import HTTPException
 from unidecode import unidecode
 
 from api.llm import MODEL_LISTS, OPENAI_BASE_CLIENT
+from api.models import NumerologyLLMResponse
 from api.prompts.numerology import SYSTEM_PROMPT
 
 logger = logging.getLogger(__name__)
@@ -17,7 +18,7 @@ class NumerologyReader:
     """numerology computation and interpretation service."""
 
     models: list[str] = MODEL_LISTS
-    client: openai.AsyncOpenAI = OPENAI_BASE_CLIENT
+    client: instructor.AsyncInstructor = instructor.from_openai(OPENAI_BASE_CLIENT)
     max_analysis_length: int = 1200
 
     @classmethod
@@ -82,7 +83,7 @@ class NumerologyReader:
 
     @classmethod
     async def analyze(cls, name: str, dob: str, question: str) -> str:
-        """Perform numerology analysis and LLM interpretation."""
+        """Perform numerology analysis and LLM interpretation with structured output."""
         numerology = cls.calculate(name, dob)
         user_input = json.dumps(
             {
@@ -105,8 +106,17 @@ class NumerologyReader:
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_input},
                     ],
+                    response_model=NumerologyLLMResponse,
                 )
-                return response.choices[0].message.content
+
+                # Validate and format the structured response
+                validated_response = NumerologyLLMResponse.model_validate(response, strict=True)
+
+                # Format the final output consistently
+                formatted_output = f"{validated_response.calculations}\n\n{validated_response.insight}"
+
+                return formatted_output
+
             except Exception as e:
                 logger.error(f"Model {model} failed: {e}")
                 if model != cls.models[-1]:

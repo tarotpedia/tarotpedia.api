@@ -7,7 +7,7 @@ from .api import (
     TarotAPIRequest,
     TarotAPIResponse,
 )
-from .llm import TarotLLMResponse
+from .llm import NumerologyLLMResponse, TarotLLMResponse
 from .tarot import TarotCard, TarotInterpretation
 
 __all__ = [
@@ -18,6 +18,7 @@ __all__ = [
     "TarotCard",
     "TarotInterpretation",
     "TarotLLMResponse",
+    "NumerologyLLMResponse",
     "NumerologyAPIRequest",
     "NumerologyAPIResponse",
     "CardInfoAPIResponse",
