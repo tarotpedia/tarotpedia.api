@@ -54,7 +54,7 @@ class NumerologyReader:
         while total_sum > 9:
             total_sum = sum(int(d) for d in str(total_sum))
             reduction_steps.append(str(total_sum))
-        personal_expl = " → ".join(reduction_steps)
+        personal_expl = " --> ".join(reduction_steps)
 
         current_year = datetime.now().year
         current_year_digits = [int(ch) for ch in str(current_year) if ch.isdigit()]
