@@ -8,6 +8,13 @@ from .api import (
     TarotAPIResponse,
 )
 from .llm import NumerologyLLMResponse, TarotLLMResponse
+from .reading import (
+    CardInterpretationResponse,
+    GetReadingResponse,
+    ReadingCardResponse,
+    SaveReadingRequest,
+    SaveReadingResponse,
+)
 from .tarot import TarotCard, TarotInterpretation
 
 __all__ = [
@@ -22,4 +29,9 @@ __all__ = [
     "NumerologyAPIRequest",
     "NumerologyAPIResponse",
     "CardInfoAPIResponse",
+    "SaveReadingRequest",
+    "SaveReadingResponse",
+    "GetReadingResponse",
+    "ReadingCardResponse",
+    "CardInterpretationResponse",
 ]

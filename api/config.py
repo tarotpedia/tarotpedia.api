@@ -12,6 +12,7 @@ if IS_ENV_EXISTS:
     logger.info("Loading environment variables from .env file")
     dotenv.load_dotenv(".env")
 
+DATABASE_URL = os.environ["DATABASE_URL"]
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 OPENAI_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
 OPENAI_BASE_CLIENT = openai.AsyncOpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)

@@ -1,19 +1,27 @@
 import logging
 import os
 from pathlib import Path
+from uuid import UUID
 
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from api import __title__, __version__
+from api.db import create_reading, get_db, get_reading
 from api.models import (
     CardInfoAPIResponse,
+    CardInterpretationResponse,
     CardsAPIRequest,
     CardsAPIResponse,
+    GetReadingResponse,
     NumerologyAPIRequest,
     NumerologyAPIResponse,
+    ReadingCardResponse,
+    SaveReadingRequest,
+    SaveReadingResponse,
     TarotAPIRequest,
     TarotAPIResponse,
 )
@@ -276,6 +284,67 @@ def get_card_info(card_number: int) -> CardInfoAPIResponse:
     tarot_deck = TarotDeck()
     card_info = tarot_deck.get_card_info(card_number)
     return CardInfoAPIResponse(**card_info)
+
+
+@app.post("/readings/save", response_model=SaveReadingResponse, tags=["Readings API"])
+async def save_reading(request: SaveReadingRequest, db: AsyncSession = Depends(get_db)) -> SaveReadingResponse:
+    try:
+        reading_id = await create_reading(
+            db=db,
+            user_name=request.user_name,
+            user_dob=request.user_dob,
+            question=request.question,
+            cards=request.cards,
+            interpretations=request.interpretations,
+            summary=request.summary,
+            numerology_meaning=request.numerology_meaning,
+        )
+
+        return SaveReadingResponse(reading_id=reading_id, message="Reading saved successfully")
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save reading: {str(e)}")
+
+
+@app.get("/readings/{reading_id}", response_model=GetReadingResponse, tags=["Readings API"])
+async def get_reading_by_id(reading_id: UUID, db: AsyncSession = Depends(get_db)) -> GetReadingResponse:
+    reading = await get_reading(db, reading_id)
+
+    if not reading:
+        raise HTTPException(status_code=404, detail="Reading not found")
+
+    cards = [
+        ReadingCardResponse(
+            position=card.position,
+            card_name=card.card_name,
+            is_upright=card.is_upright,
+            image_url=card.image_url,
+            full_card_name=card.full_card_name,
+        )
+        for card in reading.cards
+    ]
+
+    interpretations = [
+        CardInterpretationResponse(
+            card_name=interp.card_name,
+            position=interp.position,
+            orientation=interp.orientation,
+            meaning=interp.meaning,
+        )
+        for interp in reading.interpretations
+    ]
+
+    return GetReadingResponse(
+        reading_id=reading.id,
+        user_name=reading.user_name,
+        user_dob=reading.user_dob,
+        question=reading.question,
+        cards=cards,
+        interpretations=interpretations,
+        summary=reading.summary.summary if reading.summary else "",
+        numerology_meaning=reading.numerology.numerology_meaning if reading.numerology else None,
+        created_at=reading.created_at,
+    )
 
 
 if __name__ == "__main__":

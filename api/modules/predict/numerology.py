@@ -7,7 +7,7 @@ import instructor
 from fastapi import HTTPException
 from unidecode import unidecode
 
-from api.llm import MODEL_LISTS, OPENAI_BASE_CLIENT
+from api.config import MODEL_LISTS, OPENAI_CLIENT
 from api.models import NumerologyLLMResponse
 from api.prompts.numerology import SYSTEM_PROMPT
 
@@ -18,7 +18,7 @@ class NumerologyReader:
     """numerology computation and interpretation service."""
 
     models: list[str] = MODEL_LISTS
-    client: instructor.AsyncInstructor = instructor.from_openai(OPENAI_BASE_CLIENT)
+    client: instructor.AsyncInstructor = OPENAI_CLIENT
     max_analysis_length: int = 1200
 
     @classmethod
@@ -54,7 +54,7 @@ class NumerologyReader:
         while total_sum > 9:
             total_sum = sum(int(d) for d in str(total_sum))
             reduction_steps.append(str(total_sum))
-        personal_expl = " --> ".join(reduction_steps)
+        personal_expl = " → ".join(reduction_steps)
 
         current_year = datetime.now().year
         current_year_digits = [int(ch) for ch in str(current_year) if ch.isdigit()]
@@ -109,10 +109,7 @@ class NumerologyReader:
                     response_model=NumerologyLLMResponse,
                 )
 
-                # Validate and format the structured response
                 validated_response = NumerologyLLMResponse.model_validate(response, strict=True)
-
-                # Format the final output consistently
                 formatted_output = f"{validated_response.calculations}\n\n{validated_response.insight}"
 
                 return formatted_output

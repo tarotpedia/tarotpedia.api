@@ -6,7 +6,7 @@ from typing import Any, List, Optional, Tuple
 import instructor
 from fastapi import HTTPException
 
-from api.llm import OPENAI_CLIENT
+from api.config import MODEL_LISTS, OPENAI_CLIENT
 from api.models import TarotCard, TarotInterpretation, TarotLLMResponse
 from api.prompts.tarot import SYSTEM_PROMPT
 
@@ -19,7 +19,7 @@ class TarotReader:
     """
 
     client: instructor.AsyncInstructor = OPENAI_CLIENT
-    models: list[str] = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"]
+    models: list[str] = MODEL_LISTS
 
     @classmethod
     def configure(

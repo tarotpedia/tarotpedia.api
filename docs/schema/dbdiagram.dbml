@@ -1,0 +1,66 @@
+Table readings {
+  id uuid [pk, default: `gen_random_uuid()`]
+  user_name varchar(255) [not null]
+  user_dob date [not null]
+  question text [not null]
+  created_at timestamp [default: `now()`, not null]
+  updated_at timestamp [default: `now()`, not null]
+
+  indexes {
+    id [unique]
+    created_at
+  }
+}
+
+Table reading_cards {
+  id uuid [pk, default: `gen_random_uuid()`]
+  reading_id uuid [ref: > readings.id, not null]
+  position varchar(20) [not null]
+  card_name varchar(255) [not null]
+  is_upright boolean [not null]
+  image_url varchar(500)
+  full_card_name varchar(300) [not null]
+  created_at timestamp [default: `now()`, not null]
+
+  indexes {
+    reading_id
+    (reading_id, position) [unique]
+  }
+}
+
+Table card_interpretations {
+  id uuid [pk, default: `gen_random_uuid()`]
+  reading_id uuid [ref: > readings.id, not null]
+  card_name varchar(255) [not null]
+  position varchar(20) [not null]
+  orientation varchar(20) [not null]
+  meaning text [not null]
+  created_at timestamp [default: `now()`, not null]
+
+  indexes {
+    reading_id
+    (reading_id, position) [unique]
+  }
+}
+
+Table reading_summary {
+  id uuid [pk, default: `gen_random_uuid()`]
+  reading_id uuid [ref: - readings.id, not null]
+  summary text [not null]
+  created_at timestamp [default: `now()`, not null]
+
+  indexes {
+    reading_id [unique]
+  }
+}
+
+Table numerology_data {
+  id uuid [pk, default: `gen_random_uuid()`]
+  reading_id uuid [ref: - readings.id, not null]
+  numerology_meaning text [not null]
+  created_at timestamp [default: `now()`, not null]
+
+  indexes {
+    reading_id [unique]
+  }
+}

@@ -32,6 +32,16 @@ In your codebase, you can add the `mkdocs` markdown below the Python `class`, `f
 
 A markdown file is need to reference to the function with syntax `::: {path_to_python_file}.{function_name}`. Then `mkdocs` will generate the API documentation for you.
 
+## Database Schema
+
+![Database Schema](docs/schema/dbdiagram.png)
+
+Currently, the website https://tarotpedia.vercel.app is using the database schema above.
+
+We are using [Neon](https://neon.tech) as our database provider.
+
+The `Save` button on the website is an optional UI feature and is not supported by the API.
+
 ## Contribute
 
 Please fork this repo and create a pull request, I will thank you later. This is my hobby project and I hope it can help your hobbies too.
