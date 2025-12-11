@@ -20,7 +20,7 @@ async def create_reading(
     summary: str,
     numerology_meaning: Optional[str] = None,
 ) -> UUID:
-    reading = Reading(user_name=user_name, user_dob=user_dob, question=question)
+    reading = Reading(user_name=user_name, user_birth_date=user_dob, question_text=question)
 
     db.add(reading)
     await db.flush()
@@ -30,34 +30,34 @@ async def create_reading(
     for idx, card in enumerate(cards):
         position = position_map.get(idx, f"card_{idx}")
         reading_card = ReadingCard(
-            reading_id=reading.id,
-            position=position,
+            reading_id=reading.reading_id,
+            card_position_text=position,
             card_name=card.name,
             is_upright=card.is_upright,
-            image_url=card.image_url,
+            card_image_url=card.image_url,
             full_card_name=card.full_card_name,
         )
         db.add(reading_card)
 
     for interp in interpretations:
         card_interpretation = CardInterpretation(
-            reading_id=reading.id,
+            reading_id=reading.reading_id,
             card_name=interp.card_name,
-            position=interp.position,
-            orientation=interp.orientation,
-            meaning=interp.meaning,
+            card_position_text=interp.position,
+            card_orientation_text=interp.orientation,
+            meaning_text=interp.meaning,
         )
         db.add(card_interpretation)
 
-    reading_summary = ReadingSummary(reading_id=reading.id, summary=summary)
+    reading_summary = ReadingSummary(reading_id=reading.reading_id, summary_text=summary)
     db.add(reading_summary)
 
     if numerology_meaning:
-        numerology_data = NumerologyData(reading_id=reading.id, numerology_meaning=numerology_meaning)
+        numerology_data = NumerologyData(reading_id=reading.reading_id, meaning_text=numerology_meaning)
         db.add(numerology_data)
 
     await db.commit()
-    return reading.id
+    return reading.reading_id
 
 
 async def get_reading(db: AsyncSession, reading_id: UUID) -> Optional[Reading]:
@@ -69,7 +69,7 @@ async def get_reading(db: AsyncSession, reading_id: UUID) -> Optional[Reading]:
             selectinload(Reading.summary),
             selectinload(Reading.numerology),
         )
-        .where(Reading.id == reading_id)
+        .where(Reading.reading_id == reading_id)
     )
 
     result = await db.execute(stmt)

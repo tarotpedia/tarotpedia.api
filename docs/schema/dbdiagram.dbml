@@ -1,52 +1,52 @@
 Table readings {
-  id uuid [pk, default: `gen_random_uuid()`]
+  reading_id uuid [pk, default: `gen_random_uuid()`]
   user_name varchar(255) [not null]
-  user_dob date [not null]
-  question text [not null]
+  user_birth_date date [not null]
+  question_text text [not null]
   created_at timestamp [default: `now()`, not null]
   updated_at timestamp [default: `now()`, not null]
 
   indexes {
-    id [unique]
+    reading_id [unique]
     created_at
   }
 }
 
 Table reading_cards {
-  id uuid [pk, default: `gen_random_uuid()`]
-  reading_id uuid [ref: > readings.id, not null]
-  position varchar(20) [not null]
+  reading_card_id uuid [pk, default: `gen_random_uuid()`]
+  reading_id uuid [ref: > readings.reading_id, not null]
+  card_position_text varchar(20) [not null]
   card_name varchar(255) [not null]
   is_upright boolean [not null]
-  image_url varchar(500)
+  card_image_url varchar(500)
   full_card_name varchar(300) [not null]
   created_at timestamp [default: `now()`, not null]
 
   indexes {
     reading_id
-    (reading_id, position) [unique]
+    (reading_id, card_position_text) [unique]
   }
 }
 
 Table card_interpretations {
-  id uuid [pk, default: `gen_random_uuid()`]
-  reading_id uuid [ref: > readings.id, not null]
+  interpretation_id uuid [pk, default: `gen_random_uuid()`]
+  reading_id uuid [ref: > readings.reading_id, not null]
   card_name varchar(255) [not null]
-  position varchar(20) [not null]
-  orientation varchar(20) [not null]
-  meaning text [not null]
+  card_position_text varchar(20) [not null]
+  card_orientation_text varchar(20) [not null]
+  meaning_text text [not null]
   created_at timestamp [default: `now()`, not null]
 
   indexes {
     reading_id
-    (reading_id, position) [unique]
+    (reading_id, card_position_text) [unique]
   }
 }
 
-Table reading_summary {
-  id uuid [pk, default: `gen_random_uuid()`]
-  reading_id uuid [ref: - readings.id, not null]
-  summary text [not null]
+Table reading_summaries {
+  summary_id uuid [pk, default: `gen_random_uuid()`]
+  reading_id uuid [ref: - readings.reading_id, not null]
+  summary_text text [not null]
   created_at timestamp [default: `now()`, not null]
 
   indexes {
@@ -54,10 +54,10 @@ Table reading_summary {
   }
 }
 
-Table numerology_data {
-  id uuid [pk, default: `gen_random_uuid()`]
-  reading_id uuid [ref: - readings.id, not null]
-  numerology_meaning text [not null]
+Table numerology_entries {
+  numerology_id uuid [pk, default: `gen_random_uuid()`]
+  reading_id uuid [ref: - readings.reading_id, not null]
+  meaning_text text [not null]
   created_at timestamp [default: `now()`, not null]
 
   indexes {

@@ -315,10 +315,10 @@ async def get_reading_by_id(reading_id: UUID, db: AsyncSession = Depends(get_db)
 
     cards = [
         ReadingCardResponse(
-            position=card.position,
+            position=card.card_position_text,
             card_name=card.card_name,
             is_upright=card.is_upright,
-            image_url=card.image_url,
+            image_url=card.card_image_url,
             full_card_name=card.full_card_name,
         )
         for card in reading.cards
@@ -327,22 +327,22 @@ async def get_reading_by_id(reading_id: UUID, db: AsyncSession = Depends(get_db)
     interpretations = [
         CardInterpretationResponse(
             card_name=interp.card_name,
-            position=interp.position,
-            orientation=interp.orientation,
-            meaning=interp.meaning,
+            position=interp.card_position_text,
+            orientation=interp.card_orientation_text,
+            meaning=interp.meaning_text,
         )
         for interp in reading.interpretations
     ]
 
     return GetReadingResponse(
-        reading_id=reading.id,
+        reading_id=reading.reading_id,
         user_name=reading.user_name,
-        user_dob=reading.user_dob,
-        question=reading.question,
+        user_dob=reading.user_birth_date,
+        question=reading.question_text,
         cards=cards,
         interpretations=interpretations,
-        summary=reading.summary.summary if reading.summary else "",
-        numerology_meaning=reading.numerology.numerology_meaning if reading.numerology else None,
+        summary=reading.summary.summary_text if reading.summary else "",
+        numerology_meaning=reading.numerology.meaning_text if reading.numerology else None,
         created_at=reading.created_at,
     )
 

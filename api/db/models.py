@@ -11,10 +11,10 @@ from api.db.database import Base
 class Reading(Base):
     __tablename__ = "readings"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    reading_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_name = Column(String(255), nullable=False)
-    user_dob = Column(Date, nullable=False)
-    question = Column(Text, nullable=False)
+    user_birth_date = Column(Date, nullable=False)
+    question_text = Column(Text, nullable=False)
     created_at = Column(Text, nullable=False, default=lambda: datetime.utcnow().isoformat())
     updated_at = Column(
         Text,
@@ -31,14 +31,14 @@ class Reading(Base):
 
 class ReadingCard(Base):
     __tablename__ = "reading_cards"
-    __table_args__ = (UniqueConstraint("reading_id", "position", name="uq_reading_position"),)
+    __table_args__ = (UniqueConstraint("reading_id", "card_position_text", name="uq_reading_position"),)
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    reading_id = Column(UUID(as_uuid=True), ForeignKey("readings.id", ondelete="CASCADE"), nullable=False)
-    position = Column(String(20), nullable=False)
+    reading_card_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    reading_id = Column(UUID(as_uuid=True), ForeignKey("readings.reading_id", ondelete="CASCADE"), nullable=False)
+    card_position_text = Column(String(20), nullable=False)
     card_name = Column(String(255), nullable=False)
     is_upright = Column(Boolean, nullable=False)
-    image_url = Column(String(500))
+    card_image_url = Column(String(500))
     full_card_name = Column(String(300), nullable=False)
     created_at = Column(Text, nullable=False, default=lambda: datetime.utcnow().isoformat())
 
@@ -47,36 +47,40 @@ class ReadingCard(Base):
 
 class CardInterpretation(Base):
     __tablename__ = "card_interpretations"
-    __table_args__ = (UniqueConstraint("reading_id", "position", name="uq_interpretation_position"),)
+    __table_args__ = (UniqueConstraint("reading_id", "card_position_text", name="uq_interpretation_position"),)
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    reading_id = Column(UUID(as_uuid=True), ForeignKey("readings.id", ondelete="CASCADE"), nullable=False)
+    interpretation_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    reading_id = Column(UUID(as_uuid=True), ForeignKey("readings.reading_id", ondelete="CASCADE"), nullable=False)
     card_name = Column(String(255), nullable=False)
-    position = Column(String(20), nullable=False)
-    orientation = Column(String(20), nullable=False)
-    meaning = Column(Text, nullable=False)
+    card_position_text = Column(String(20), nullable=False)
+    card_orientation_text = Column(String(20), nullable=False)
+    meaning_text = Column(Text, nullable=False)
     created_at = Column(Text, nullable=False, default=lambda: datetime.utcnow().isoformat())
 
     reading = relationship("Reading", back_populates="interpretations")
 
 
 class ReadingSummary(Base):
-    __tablename__ = "reading_summary"
+    __tablename__ = "reading_summaries"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    reading_id = Column(UUID(as_uuid=True), ForeignKey("readings.id", ondelete="CASCADE"), nullable=False, unique=True)
-    summary = Column(Text, nullable=False)
+    summary_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    reading_id = Column(
+        UUID(as_uuid=True), ForeignKey("readings.reading_id", ondelete="CASCADE"), nullable=False, unique=True
+    )
+    summary_text = Column(Text, nullable=False)
     created_at = Column(Text, nullable=False, default=lambda: datetime.utcnow().isoformat())
 
     reading = relationship("Reading", back_populates="summary")
 
 
 class NumerologyData(Base):
-    __tablename__ = "numerology_data"
+    __tablename__ = "numerology_entries"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    reading_id = Column(UUID(as_uuid=True), ForeignKey("readings.id", ondelete="CASCADE"), nullable=False, unique=True)
-    numerology_meaning = Column(Text, nullable=False)
+    numerology_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    reading_id = Column(
+        UUID(as_uuid=True), ForeignKey("readings.reading_id", ondelete="CASCADE"), nullable=False, unique=True
+    )
+    meaning_text = Column(Text, nullable=False)
     created_at = Column(Text, nullable=False, default=lambda: datetime.utcnow().isoformat())
 
     reading = relationship("Reading", back_populates="numerology")

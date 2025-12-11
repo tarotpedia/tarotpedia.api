@@ -34,13 +34,13 @@ A markdown file is need to reference to the function with syntax `::: {path_to_p
 
 ## Database Schema
 
-![Database Schema](docs/schema/dbdiagram.png)
+![Database Schema](docs/schema/dbdiagram.svg)
 
 Currently, the website https://tarotpedia.vercel.app is using the database schema above.
 
-We are using [Neon](https://neon.tech) as our database provider.
+We use [Neon](https://neon.tech) as our database provider.
 
-The `Save` button on the website is an optional UI feature and is not supported by the API.
+This is an optional UI feature and is not supported for general purposes.
 
 ## Contribute
 
